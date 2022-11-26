@@ -147,7 +147,7 @@ namespace Negocio
             {
                 using (SqlConnection oconexion = new SqlConnection(AccesoDatos.Conexion.GetConnectionString()))
                 {
-                    string query = "DoctorAdd";
+                    string query = "PacienteAdd";
 
                     using (SqlCommand cmd = new SqlCommand())
                     {
@@ -155,32 +155,146 @@ namespace Negocio
                         cmd.CommandText = query;
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        //SqlParameter[] collection = new SqlParameter[5];
-                        //collection[0] = new SqlParameter("Nombre", SqlDbType.VarChar);
-                        //collection[0].Value = doctor.Nombre;
-                        //collection[1] = new SqlParameter("ApellidoPaterno", SqlDbType.VarChar);
-                        //collection[1].Value = doctor.ApellidoPaterno;
-                        //collection[2] = new SqlParameter("ApellidoMaterno", SqlDbType.VarChar);
-                        //collection[2].Value = doctor.ApellidoMaterno;
-                        //collection[3] = new SqlParameter("Cedula", SqlDbType.VarChar);
-                        //collection[3].Value = doctor.Cedula;
-                        //collection[4] = new SqlParameter("Foto", SqlDbType.VarChar);
-                        //collection[4].Value = doctor.Foto;
+                        SqlParameter[] collection = new SqlParameter[7];
+                        collection[0] = new SqlParameter("Nombre", SqlDbType.VarChar);
+                        collection[0].Value = paciente.Nombre;
+                        collection[1] = new SqlParameter("ApellidoPaterno", SqlDbType.VarChar);
+                        collection[1].Value = paciente.ApellidoPaterno;
+                        collection[2] = new SqlParameter("ApellidoMaterno", SqlDbType.VarChar);
+                        collection[2].Value = paciente.ApellidoMaterno;
+                        collection[3] = new SqlParameter("FechaNacimiento", SqlDbType.Date);
+                        collection[3].Value = paciente.FechaNacimiento;
+                        collection[4] = new SqlParameter("Peso", SqlDbType.Decimal);
+                        collection[4].Value = paciente.Peso;
+                        collection[5] = new SqlParameter("Altura", SqlDbType.Decimal);
+                        collection[5].Value = paciente.Altura;
+                        collection[6] = new SqlParameter("Foto", SqlDbType.VarChar);
+                        collection[6].Value = paciente.Foto;
 
-                        //cmd.Parameters.AddRange(collection);
-                        //cmd.Connection.Open();
+                        cmd.Parameters.AddRange(collection);
+                        cmd.Connection.Open();
 
-                        //int RowsAffected = cmd.ExecuteNonQuery();
+                        int RowsAffected = cmd.ExecuteNonQuery();
 
-                        //if (RowsAffected > 0)
-                        //{
-                        //    result.Correct = true;
-                        //}
-                        //else
-                        //{
-                        //    result.Correct = false;
-                        //    result.ErrorMessage = "Ocurrio un error al registrar";
-                        //}
+                        if (RowsAffected > 0)
+                        {
+                            result.Correct = true;
+                        }
+                        else
+                        {
+                            result.Correct = false;
+                            result.ErrorMessage = "Ocurrio un error al registrar";
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+
+            return result;
+        }
+
+        public static Result Update(Paciente paciente)
+        {
+            Result result = new Result();
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(AccesoDatos.Conexion.GetConnectionString()))
+                {
+                    string query = "PacienteUpdate";
+
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
+                        cmd.Connection = oconexion;
+                        cmd.CommandText = query;
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        SqlParameter[] collection = new SqlParameter[8];
+                        collection[0] = new SqlParameter("Nombre", SqlDbType.VarChar);
+                        collection[0].Value = paciente.Nombre;
+                        collection[1] = new SqlParameter("ApellidoPaterno", SqlDbType.VarChar);
+                        collection[1].Value = paciente.ApellidoPaterno;
+                        collection[2] = new SqlParameter("ApellidoMaterno", SqlDbType.VarChar);
+                        collection[2].Value = paciente.ApellidoMaterno;
+                        collection[3] = new SqlParameter("FechaNacimiento", SqlDbType.Date);
+                        collection[3].Value = paciente.FechaNacimiento;
+                        collection[4] = new SqlParameter("Peso", SqlDbType.Decimal);
+                        collection[4].Value = paciente.Peso;
+                        collection[5] = new SqlParameter("Altura", SqlDbType.Decimal);
+                        collection[5].Value = paciente.Altura;
+                        collection[6] = new SqlParameter("Foto", SqlDbType.VarChar);
+                        collection[6].Value = paciente.Foto;
+                        collection[7] = new SqlParameter("IdPaciente", SqlDbType.Int);
+                        collection[7].Value = paciente.IdPaciente;
+
+                        cmd.Parameters.AddRange(collection);
+                        cmd.Connection.Open();
+
+                        int RowsAffected = cmd.ExecuteNonQuery();
+
+                        if (RowsAffected > 0)
+                        {
+                            result.Correct = true;
+                        }
+                        else
+                        {
+                            result.Correct = false;
+                            result.ErrorMessage = "Ocurrio un error al actualizar el registro";
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+
+            return result;
+        }
+
+        public static Result Delete(int idPaciente)
+        {
+            Result result = new Result();
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(AccesoDatos.Conexion.GetConnectionString()))
+                {
+                    string query = "PacienteDelete";
+
+                    using (SqlCommand cmd = new SqlCommand())
+                    {
+                        cmd.Connection = oconexion;
+                        cmd.CommandText = query;
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        SqlParameter[] collection = new SqlParameter[1];
+                        collection[0] = new SqlParameter("IdPaciente", SqlDbType.Int);
+                        collection[0].Value = idPaciente;
+
+                        cmd.Parameters.AddRange(collection);
+                        cmd.Connection.Open();
+
+                        int RowsAffected = cmd.ExecuteNonQuery();
+
+                        if (RowsAffected > 0)
+                        {
+                            result.Correct = true;
+                        }
+                        else
+                        {
+                            result.Correct = false;
+                            result.ErrorMessage = "Ocurrio un error al Eliminar el registro";
+                        }
                     }
                 }
 

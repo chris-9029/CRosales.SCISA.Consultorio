@@ -39,6 +39,54 @@ namespace SL_WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("Add")]
+        public IActionResult Add([FromBody] Negocio.Paciente paciente)
+        {
+            Negocio.Result result = Negocio.Paciente.Add(paciente);
+
+            if (result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("Update")]
+        public IActionResult Update([FromBody] Negocio.Paciente paciente)
+        {
+            Negocio.Result result = Negocio.Paciente.Update(paciente);
+            if (result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+        [HttpDelete]
+        [Route("delete/{idPaciente}")]
+        public IActionResult Delete(int idPaciente)
+        {
+            Negocio.Result result = Negocio.Paciente.Delete(idPaciente);
+
+            if (result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound(result);
+            }
+
+        }
 
 
     }
