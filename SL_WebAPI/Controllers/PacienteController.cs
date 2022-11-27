@@ -8,7 +8,7 @@ namespace SL_WebAPI.Controllers
     public class PacienteController : ControllerBase
     {
         [HttpGet]
-        [Route("GetAll")]
+        //[Route("GetAll")]
         public IActionResult GetAll()
         {
             Negocio.Result result = Negocio.Paciente.GetAll();

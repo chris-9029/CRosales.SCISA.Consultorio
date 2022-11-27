@@ -10,7 +10,7 @@ namespace SL_WebAPI.Controllers
     {
         // GET: api/<DoctorController>
         [HttpGet]
-        [Route("GetAll")]
+        //[Route("GetAll")]
         public IActionResult GetAll()
         {
             Negocio.Result result = Negocio.Doctor.GetAll();

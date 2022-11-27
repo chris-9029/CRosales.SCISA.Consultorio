@@ -1,0 +1,159 @@
+﻿@model Negocio.Paciente
+@{
+    ViewBag.Title = "Form";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Paciente</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="row g-2">
+            @using (Html.BeginForm("Form", "Paciente", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.IdPaciente, new { @class = "d-none" })
+                        @Html.TextBoxFor(model => model.IdPaciente, new { @class = "d-none form-control" })
+
+                        @*d-none*@
+                    </div>
+                </div>
+                <div class="form-group row mb-3">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Nombre)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id="txtNombre"})
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ApellidoPaterno)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", @id="txtApellidoPaterno" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.ApellidoMaterno)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control", @id="txtApellidoMaterno" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.FechaNacimiento)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control", @id="txtFechaNacimiento" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group row mb-3">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Peso)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.Peso, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.LabelFor(model => model.Altura)
+                        <div class="input-group md-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
+                            @Html.TextBoxFor(model => model.Altura, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-6 pt-3">
+                        @Html.LabelFor(model=> model.Foto)
+
+                        <div class="input-group col-3">
+                            <span class="input-group-text" id="basic-addon1"><i class="bi bi-card-image"></i></span>
+                            <input id="IFImagen" type='file' class="form-control" name="IFImagen" onchange="validateFile(this), readURL(this)" />
+                        </div>
+                        <div class="row d-flex justify-content-center pt-3">
+                            @if (Model.Foto != null && Model.Foto != "")
+                            {
+                                <img id="ImgPrevia" src="data:image/*;base64,@Model.Foto" style="width:96px" class="align-self-center" />
+                            }
+                            else
+                            {
+                                <img id="ImgPrevia" src="~/Imagenes/usuario.png" style="width:96px" class="align-self-center" />
+                            }
+
+                            @Html.HiddenFor(model => model.Foto)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3 pt-3">
+                        <input type="submit" value="Guardar" class="btn btn-success" />
+                        @Html.ActionLink("Regresar", "Index", "Paciente", htmlAttributes: new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#txtFechaNacimiento").datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+            });
+        });
+
+        function validateFile() {
+            var allowedExtension = ['png', 'jpg'];
+            var fileExtension = document.getElementById('IFImagen').value.split('.').pop().toLowerCase();
+            var isValidFile = false;
+            for (var index in allowedExtension) {
+                if (fileExtension === allowedExtension[index]) {
+                    isValidFile = true;
+                    break;
+                }
+            }
+            if (!isValidFile) {
+                alert('Las extensiones permitidas son : *.' + allowedExtension.join(', *.'));
+                document.getElementById('IFImagen').value = ""
+            }
+            return isValidFile;
+        }
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#ImgPrevia')
+                        .attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

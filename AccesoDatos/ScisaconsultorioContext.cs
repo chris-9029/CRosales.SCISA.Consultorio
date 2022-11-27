@@ -29,7 +29,7 @@ public partial class ScisaconsultorioContext : DbContext
     {
         modelBuilder.Entity<Citum>(entity =>
         {
-            entity.HasKey(e => e.IdCita).HasName("PK__CITA__394B0202844DAC45");
+            entity.HasKey(e => e.IdCita).HasName("PK__CITA__394B02024AFCCBA5");
 
             entity.ToTable("CITA");
 
@@ -40,16 +40,16 @@ public partial class ScisaconsultorioContext : DbContext
 
             entity.HasOne(d => d.IdDoctorNavigation).WithMany(p => p.Cita)
                 .HasForeignKey(d => d.IdDoctor)
-                .HasConstraintName("FK__CITA__IdDoctor__145C0A3F");
+                .HasConstraintName("FK__CITA__IdDoctor__31EC6D26");
 
             entity.HasOne(d => d.IdPacienteNavigation).WithMany(p => p.Cita)
                 .HasForeignKey(d => d.IdPaciente)
-                .HasConstraintName("FK__CITA__IdPaciente__15502E78");
+                .HasConstraintName("FK__CITA__IdPaciente__32E0915F");
         });
 
         modelBuilder.Entity<Doctor>(entity =>
         {
-            entity.HasKey(e => e.IdDoctor).HasName("PK__Doctor__F838DB3E0406715E");
+            entity.HasKey(e => e.IdDoctor).HasName("PK__Doctor__F838DB3E378169FA");
 
             entity.ToTable("Doctor");
 
@@ -70,7 +70,7 @@ public partial class ScisaconsultorioContext : DbContext
 
         modelBuilder.Entity<Paciente>(entity =>
         {
-            entity.HasKey(e => e.IdPaciente).HasName("PK__Paciente__C93DB49B8614E68F");
+            entity.HasKey(e => e.IdPaciente).HasName("PK__Paciente__C93DB49B469B9E0A");
 
             entity.ToTable("Paciente");
 

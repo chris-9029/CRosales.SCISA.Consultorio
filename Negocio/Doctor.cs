@@ -15,12 +15,15 @@ namespace Negocio
     public class Doctor
     {
         public int IdDoctor { get; set; }
-        public string Nombre { get; set; }
-        public string ApellidoPaterno { get; set; }
-        public string ApellidoMaterno { get; set; }
-        public string Cedula { get; set; }
-        public string Foto { get; set; }
+        public string? Nombre { get; set; }
+        public string? ApellidoPaterno { get; set; }
+        public string? ApellidoMaterno { get; set; }
+        public string? Cedula { get; set; }
+        public string? Foto { get; set; }
 
+        public string? NombreCompleto { get; set; }
+
+        public List<object>? doctores { get; set; }
         public static Result GetAll()
         {
             Result result = new Result();
@@ -53,6 +56,8 @@ namespace Negocio
                                 doctor.ApellidoMaterno = row[3].ToString();
                                 doctor.Cedula = row[4].ToString();
                                 doctor.Foto = row[5].ToString();
+
+                                doctor.NombreCompleto = doctor.Nombre + " " + doctor.ApellidoPaterno + " " + doctor.ApellidoMaterno;
                                 result.Objects.Add(doctor);
 
                             }

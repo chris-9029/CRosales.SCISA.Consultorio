@@ -11,13 +11,15 @@ namespace Negocio
     public class Paciente
     {
         public int IdPaciente { get; set; }
-        public string Nombre { get; set; }
-        public string ApellidoPaterno { get; set; }
-        public string ApellidoMaterno { get; set; }
-        public DateTime FechaNacimiento { get; set; }
-        public decimal Peso { get; set; }
-        public decimal Altura { get; set; }
-        public string Foto { get; set; }
+        public string? Nombre { get; set; }
+        public string? ApellidoPaterno { get; set; }
+        public string? ApellidoMaterno { get; set; }
+        public string? FechaNacimiento { get; set; }
+        public decimal? Peso { get; set; }
+        public decimal? Altura { get; set; }
+        public string? Foto { get; set; }
+
+        public List<object>? pacientes { get; set; }
 
         public static Result GetAll()
         {
@@ -49,7 +51,7 @@ namespace Negocio
                                 paciente.Nombre = row[1].ToString();
                                 paciente.ApellidoPaterno = row[2].ToString();
                                 paciente.ApellidoMaterno = row[3].ToString();
-                                paciente.FechaNacimiento = DateTime.Parse(row[4].ToString());
+                                paciente.FechaNacimiento = (DateTime.Parse(row[4].ToString())).ToString("dd-MM-yyyy");
                                 paciente.Peso = decimal.Parse(row[5].ToString());
                                 paciente.Altura = decimal.Parse(row[6].ToString());
                                 paciente.Foto = row[7].ToString();
@@ -110,7 +112,7 @@ namespace Negocio
                                 paciente.Nombre = dr[1].ToString();
                                 paciente.ApellidoPaterno = dr[2].ToString();
                                 paciente.ApellidoMaterno = dr[3].ToString();
-                                paciente.FechaNacimiento = DateTime.Parse(dr[4].ToString());
+                                paciente.FechaNacimiento = (DateTime.Parse(dr[4].ToString())).ToString("dd-MM-yyyy");
                                 paciente.Peso = decimal.Parse(dr[5].ToString());
                                 paciente.Altura = decimal.Parse(dr[6].ToString());
                                 paciente.Foto = dr[7].ToString();
@@ -163,7 +165,7 @@ namespace Negocio
                         collection[2] = new SqlParameter("ApellidoMaterno", SqlDbType.VarChar);
                         collection[2].Value = paciente.ApellidoMaterno;
                         collection[3] = new SqlParameter("FechaNacimiento", SqlDbType.Date);
-                        collection[3].Value = paciente.FechaNacimiento;
+                        collection[3].Value =  DateTime.Parse(paciente.FechaNacimiento);
                         collection[4] = new SqlParameter("Peso", SqlDbType.Decimal);
                         collection[4].Value = paciente.Peso;
                         collection[5] = new SqlParameter("Altura", SqlDbType.Decimal);
@@ -223,7 +225,7 @@ namespace Negocio
                         collection[2] = new SqlParameter("ApellidoMaterno", SqlDbType.VarChar);
                         collection[2].Value = paciente.ApellidoMaterno;
                         collection[3] = new SqlParameter("FechaNacimiento", SqlDbType.Date);
-                        collection[3].Value = paciente.FechaNacimiento;
+                        collection[3].Value = DateTime.Parse(paciente.FechaNacimiento);
                         collection[4] = new SqlParameter("Peso", SqlDbType.Decimal);
                         collection[4].Value = paciente.Peso;
                         collection[5] = new SqlParameter("Altura", SqlDbType.Decimal);
