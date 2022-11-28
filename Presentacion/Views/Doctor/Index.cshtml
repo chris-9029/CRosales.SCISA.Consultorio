@@ -15,26 +15,16 @@
     <hr />
 </div>
 
-<!--Tabla usuarios-->
 <div class="row m-0" style="padding-top:30px">
     <div class="row m-0">
-        <table class="table table-dark table-striped table-responsive">
-            <!--Encabezado de la tabla-->
+        <table class="table table-dark table-striped table-responsive" id="tbldoc">
+            <thead>
             <tr>
                 <th class="text-center" scope="col">
                     Editar
                 </th>
-                <th class="d-none" scope="col">
-                    Doctor ID
-                </th>
                 <th class="text-center" scope="col">
                     Nombre
-                </th>
-                <th class="d-none" scope="col">
-                    Apellido Paterno
-                </th>
-                <th class="d-none" scope="col">
-                    Apellido Materno
                 </th>
                 <th class="text-center" scope="col">
                     Cedula
@@ -46,16 +36,14 @@
                     Eliminar
                 </th>
             </tr>
-            <!--Este foreach itera cada elemento de la lista Objects del ML.Result-->
+            </thead>
+            <tbody>
             @foreach (Negocio.Doctor doctor in Model.doctores)
             {
                 <tr>
-                    <!--Se van mostrando en cada fila de la tabla los datos del usuario-->
+                    
                     <td class="text-center align-middle">
                         <a class="btn btn-warning bi bi-pencil-square" href="@Url.Action("Form", "Doctor", new { IdDoctor = doctor.IdDoctor })"></a>
-                    </td>
-                    <td class="d-none align-middle">
-                        @doctor.IdDoctor
                     </td>
                     <td class="text-center align-middle">
                         @doctor.Nombre @doctor.ApellidoPaterno @doctor.ApellidoMaterno
@@ -64,7 +52,7 @@
                         @doctor.Cedula
                     </td>
                     <td class="text-center col-1 align-middle">
-                        <!--Aqui se muestra la imagen, Si el modelo usuario no trae una imagen entonces muestra una predefinida -->
+                        
                         @if (doctor.Foto == "" || doctor.Foto == null)
                         {
                             <img src="~/Imagenes/usuario.png" style="width:100%" />
@@ -75,13 +63,28 @@
                         }
 
                     </td>
-
                     <th class="text-center align-middle">
                         <a class="btn btn-danger bi bi-trash" href="@Url.Action("Delete", "Doctor", new { IdDoctor = doctor.IdDoctor })" onclick="return confirm('¿Estas seguro que deseas eliminar este registro?');"></a>
                     </th>
-
                 </tr>
             }
+            </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.13.1/r-2.4.0/sp-2.1.0/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jqc-1.12.4/dt-1.13.1/r-2.4.0/sp-2.1.0/datatables.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#tbldoc').DataTable({
+                deferRender: true,
+                scrollY: 200,
+                scrollCollapse: true,
+                scroller: true
+            });
+        });
+    </script>
+}

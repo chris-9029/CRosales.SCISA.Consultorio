@@ -108,7 +108,7 @@
                         @Html.LabelFor(model => model.Detalle)
                         <div class="input-group md-3">
                             <span class="input-group-text" id="basic-addon1"><i class="bi bi-info" style="color: midnightblue"></i></span>
-                            @Html.TextBoxFor(model => model.Detalle, new { @class = "form-control" })
+                            @Html.TextAreaFor(model => model.Detalle, new { @class = "form-control" })
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -144,13 +144,14 @@
 </div>
 
 @section Scripts{
+
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(function () {
             $("#txtFechaNacimiento").datepicker({
@@ -167,7 +168,7 @@
                 changeYear: true,
             });
         });
-    
+
         function validateFile() {
             var allowedExtension = ['png', 'jpg'];
             var fileExtension = document.getElementById('IFImagen').value.split('.').pop().toLowerCase();

@@ -131,57 +131,50 @@ namespace Presentacion.Controllers
                 paciente.Foto = "";
             }
 
-            if (ModelState.IsValid)
+            if (paciente.IdPaciente == 0)
             {
-                if (paciente.IdPaciente == 0)
+                using (var client = new HttpClient())
                 {
-                    using (var client = new HttpClient())
+                    string uriConnection = _configuration["applicationUrl"];
+                    client.BaseAddress = new Uri(uriConnection);
+
+                    var postTask = client.PostAsJsonAsync("Paciente/Add", paciente);
+                    postTask.Wait();
+
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
                     {
-                        string uriConnection = _configuration["applicationUrl"];
-                        client.BaseAddress = new Uri(uriConnection);
-
-                        var postTask = client.PostAsJsonAsync("Paciente/Add", paciente);
-                        postTask.Wait();
-
-                        var result = postTask.Result;
-                        if (result.IsSuccessStatusCode)
-                        {
-                            return RedirectToAction("Index");
-                        }
-                        else
-                        {
-                            ViewBag.Message = "Algo salio mal al agregar";
-                        }
+                        return RedirectToAction("Index");
                     }
-                }
-                else
-                {
-
-                    using (var client = new HttpClient())
+                    else
                     {
-                        string uriConnection = _configuration["applicationUrl"];
-                        client.BaseAddress = new Uri(uriConnection);
-
-                        var postTask = client.PostAsJsonAsync("Paciente/Update", paciente);
-                        postTask.Wait();
-
-                        var result = postTask.Result;
-                        if (result.IsSuccessStatusCode)
-                        {
-                            return RedirectToAction("Index");
-                        }
-                        else
-                        {
-                            ViewBag.Message = "Algo salio mal actualizar";
-                        }
+                        ViewBag.Message = "Algo salio mal al agregar";
                     }
-
-
                 }
             }
             else
             {
-                return View(paciente);
+
+                using (var client = new HttpClient())
+                {
+                    string uriConnection = _configuration["applicationUrl"];
+                    client.BaseAddress = new Uri(uriConnection);
+
+                    var postTask = client.PostAsJsonAsync("Paciente/Update", paciente);
+                    postTask.Wait();
+
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Algo salio mal actualizar";
+                    }
+                }
+
+
             }
 
             return View("Modal");

@@ -44,8 +44,8 @@ namespace Negocio
                         collection[1].Value = cita.paciente.ApellidoPaterno;
                         collection[2] = new SqlParameter("@ApellidoMaterno", SqlDbType.VarChar);
                         collection[2].Value = cita.paciente.ApellidoMaterno;
-                        collection[3] = new SqlParameter("@FechaNacimiento", SqlDbType.Date);
-                        collection[3].Value = DateTime.Parse(cita.paciente.FechaNacimiento.ToString());
+                        collection[3] = new SqlParameter("@FechaNacimiento", SqlDbType.VarChar);
+                        collection[3].Value = cita.paciente.FechaNacimiento;
                         collection[4] = new SqlParameter("@Peso", SqlDbType.Decimal);
                         collection[4].Value = cita.paciente.Peso;
                         collection[5] = new SqlParameter("@Altura", SqlDbType.Decimal);
@@ -59,8 +59,8 @@ namespace Negocio
 
                         collection[8] = new SqlParameter("@Detalle", SqlDbType.VarChar);
                         collection[8].Value = cita.Detalle;
-                        collection[9] = new SqlParameter("@Fecha", SqlDbType.DateTime);
-                        collection[9].Value = DateTime.Parse(cita.Fecha.ToString());
+                        collection[9] = new SqlParameter("@Fecha", SqlDbType.VarChar);
+                        collection[9].Value = cita.Fecha;
 
                         cmd.Parameters.AddRange(collection);
                         cmd.Connection.Open();
@@ -130,7 +130,7 @@ namespace Negocio
                                 cita.paciente.ApellidoMaterno = row[8].ToString();
 
                                 cita.Detalle = row[9].ToString();
-                                cita.Fecha = row[10].ToString();
+                                cita.Fecha = (Convert.ToDateTime(row[10])).ToString("d");
 
                                 result.Objects.Add(cita);
 

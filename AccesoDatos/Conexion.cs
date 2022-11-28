@@ -10,7 +10,7 @@ namespace AccesoDatos
     {
         public static string GetConnectionString()
         {
-            return "Data Source=DESKTOP-EIT0CKC;Initial Catalog=SCISAConsultorio;"
+            return "Data Source=.;Initial Catalog=SCISAConsultorio;"
                 + "Trusted_Connection=False; encrypt=false; User ID=sa; Password=pass@word1;";
         }
     }
