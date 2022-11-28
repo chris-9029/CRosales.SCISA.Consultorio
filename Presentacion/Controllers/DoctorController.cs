@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Presentacion.Controllers
@@ -8,11 +9,13 @@ namespace Presentacion.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILogger<DoctorController> _logger;
 
-        public DoctorController(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public DoctorController(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILogger<DoctorController> logger)
         {
             _configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -21,30 +24,41 @@ namespace Presentacion.Controllers
             //Consumiendo Servicio Web
             Negocio.Result resultDoctor = new Negocio.Result();
             resultDoctor.Objects = new List<object>();
+            Negocio.Doctor doctor = new Negocio.Doctor();
 
-            using (var client = new HttpClient())
+            try
             {
-                string uriConnection = _configuration["applicationUrl"];
-                client.BaseAddress = new Uri(uriConnection);
+                _logger.LogWarning("- GET Doctor Index -");
 
-                var responseTask = client.GetAsync("Doctor");
-                responseTask.Wait();
-                var result = responseTask.Result;
-
-                if (result.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    var readTask = result.Content.ReadAsAsync<Negocio.Result>();
-                    readTask.Wait();
+                    string uriConnection = _configuration["applicationUrl"];
+                    client.BaseAddress = new Uri(uriConnection);
 
-                    foreach (var resultItem in readTask.Result.Objects)
+                    var responseTask = client.GetAsync("Doctor");
+                    responseTask.Wait();
+                    var result = responseTask.Result;
+
+                    if (result.IsSuccessStatusCode)
                     {
-                        Negocio.Doctor doctorList = Newtonsoft.Json.JsonConvert.DeserializeObject<Negocio.Doctor>(resultItem.ToString());
-                        resultDoctor.Objects.Add(doctorList);
+                        var readTask = result.Content.ReadAsAsync<Negocio.Result>();
+                        readTask.Wait();
+
+                        foreach (var resultItem in readTask.Result.Objects)
+                        {
+                            Negocio.Doctor doctorList = Newtonsoft.Json.JsonConvert.DeserializeObject<Negocio.Doctor>(resultItem.ToString());
+                            resultDoctor.Objects.Add(doctorList);
+                        }
                     }
                 }
+                doctor.doctores = resultDoctor.Objects;
+
             }
-            Negocio.Doctor doctor = new Negocio.Doctor();
-            doctor.doctores = resultDoctor.Objects;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+
 
             return View(doctor);
         }
@@ -54,13 +68,14 @@ namespace Presentacion.Controllers
         {
             Negocio.Doctor doctor = new Negocio.Doctor();
 
-            //ADD - cuando insertamos, manda la vista vacia(solo cargara los DDL)
+            
             if (idDoctor > 0 || idDoctor != null)
             {
                 Negocio.Result resultDoctor = new Negocio.Result();
 
                 try
                 {
+                    _logger.LogWarning("- GET Formulario -");
                     using (var client = new HttpClient())
                     {
                         string uriConnection = _configuration["applicationUrl"];
@@ -92,6 +107,9 @@ namespace Presentacion.Controllers
                 {
                     resultDoctor.Correct = false;
                     resultDoctor.ErrorMessage = ex.Message;
+
+                    //log24net error
+                    _logger.LogError(resultDoctor.ErrorMessage);
                 }
 
 
@@ -118,21 +136,22 @@ namespace Presentacion.Controllers
         {
             IFormFile image = Request.Form.Files["IFImagen"];
 
-            //valido si traigo imagen
-            if (image != null)
+            try
             {
-                //llamar al metodo que convierte a bytes la imagen
-                byte[] ImagenBytes = ConvertToBytes(image);
-                //convierto a base 64 la imagen y la guardo en mi objeto
-                doctor.Foto = Convert.ToBase64String(ImagenBytes);
-            }
-            else
-            {
-                doctor.Foto = "";
-            }
+                _logger.LogWarning("- POST Formulario -");
 
-            if (ModelState.IsValid)
-            {
+                if (image != null)
+                {
+                    //llamar al metodo que convierte a bytes la imagen
+                    byte[] ImagenBytes = ConvertToBytes(image);
+                    //convierto a base 64 la imagen y la guardo en mi objeto
+                    doctor.Foto = Convert.ToBase64String(ImagenBytes);
+                }
+                else
+                {
+                    doctor.Foto = "";
+                }
+
                 if (doctor.IdDoctor == 0)
                 {
                     using (var client = new HttpClient())
@@ -172,6 +191,7 @@ namespace Presentacion.Controllers
                         }
                         else
                         {
+                            _logger.LogError(result.ToString());
                             ViewBag.Message = "Algo salio mal actualizar";
                         }
                     }
@@ -179,9 +199,9 @@ namespace Presentacion.Controllers
 
                 }
             }
-            else
+            catch(Exception ex)
             {
-                return View(doctor);
+                _logger.LogError(ex.Message, ex);
             }
 
             return View("Modal");
@@ -201,31 +221,40 @@ namespace Presentacion.Controllers
         [HttpGet]
         public ActionResult Delete(int IdDoctor)
         {
-            if (IdDoctor > 0)
+            try
             {
-                using (var client = new HttpClient())
+                _logger.LogWarning("- DELETE DOCTOR -");
+
+                if (IdDoctor > 0)
                 {
-                    string uriConnection = _configuration["applicationUrl"];
-                    client.BaseAddress = new Uri(uriConnection);
-
-                    var postTask = client.DeleteAsync("Doctor/Delete/" + IdDoctor);
-                    postTask.Wait();
-
-                    var result = postTask.Result;
-                    if (result.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        return RedirectToAction("Index");
+                        string uriConnection = _configuration["applicationUrl"];
+                        client.BaseAddress = new Uri(uriConnection);
 
+                        var postTask = client.DeleteAsync("Doctor/Delete/" + IdDoctor);
+                        postTask.Wait();
+
+                        var result = postTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            return RedirectToAction("Index");
+
+                        }
+                        {
+                            ViewBag.Message = "Algo salio mal... consulta con el administrador del servidor";
+                        }
                     }
-                    {
-                        ViewBag.Message = "Algo salio mal... consulta con el administrador del servidor";
-                    }
+
                 }
-
+                else
+                {
+                    ViewBag.Message = "No se elimino... Registro no encontrado";
+                }
             }
-            else
+            catch(Exception ex)
             {
-                ViewBag.Message = "No se elimino... Registro no encontrado";
+                _logger.LogError(ex.Message, ex);
             }
             return View("Modal");
         }
