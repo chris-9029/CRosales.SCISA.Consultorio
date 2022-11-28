@@ -15,8 +15,6 @@ namespace Presentacion.Controllers
 {
     public class UsuarioController : Controller
     {
-
-
         [HttpGet]
         public ActionResult Login()
         {
